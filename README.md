@@ -8,11 +8,21 @@ gitのリポジトリのremotes/origin/masterブランチをsvnのリポジト�
 
 * svnのリポジトリは新たに作成して準備するものとします。
 * svnのリポジトリにはブランチやタグなどの情報を同期させません。
-* svnのリポジトリにはtrunk,branches,tagsのディレクトリを作成しません。
-* svnのリポジトリには初回に必ず1回だけ空コミットするものとします。
-* svnのリポジトリには初回以外は直接コミットしないものとします。
+* svnのリポジトリの同期対象のルートディレクトリのlicense属性を利用して同期をとります。
+* svnのリポジトリを新たに作成した場合は以下のように初期化してください。
 
-## svnのリポジトリの準備
+```shell
+svn propedit license file:///home/svn/svnrepos --editor-cmd "echo '' >" -m ""
+```
+
+## 例のパラメータ
+
+* svnのリポジトリのURL
+ * file:///home/svn/svnrepos
+* gitのリポジトリのURL
+ * ssh://github.com/sadapon2008/myproject.git
+
+## 例：svnのリポジトリの準備
 
 svnのリポジトリを新たに作成します。svnにコミットがないと動作しないので空コミットを行います。
 
@@ -26,7 +36,7 @@ svn propset license '' .
 svn commit -m ''
 ```
 
-## gitのリポジトリとの同期
+## 例：gitのリポジトリとの同期
 
 作業用の空ディレクトリを準備してからスクリプトを実行します。
 
@@ -34,5 +44,14 @@ svn commit -m ''
 mkdir work
 curl -LO https://github.com/sadapon2008/sync_git_svn/raw/master/sync_git_svn.sh
 /bin/bash sync_git_svn.sh ssh://github.com/sadapon2008/myproject.git file:///home/svn/svnrepos ./work
+rm -rf work
+```
+
+svnのリポジトリにtrunkがある場合は以下のようになります。
+
+```shell
+mkdir work
+curl -LO https://github.com/sadapon2008/sync_git_svn/raw/master/sync_git_svn.sh
+/bin/bash sync_git_svn.sh ssh://github.com/sadapon2008/myproject.git file:///home/svn/svnrepos/trunk ./work
 rm -rf work
 ```
